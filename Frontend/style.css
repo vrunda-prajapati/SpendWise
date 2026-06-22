@@ -1,4 +1,4 @@
-        /* ── Reset & Base ─────────────────────────── */
+/* ── Reset & Base ─────────────────────────── */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -1583,3 +1583,308 @@
                 gap: 16px;
             }
         }
+
+/* ══════════════════════════════════════════════
+   DARK MODE — comprehensive
+══════════════════════════════════════════════ */
+
+/* CSS variable overrides */
+body.dark {
+    --bg:      #0e0e14;
+    --card:    #17171f;
+    --text:    #edeaf4;
+    --muted:   #5e5a72;
+    --border:  #252530;
+
+    /* tinted surface colours — much darker than light mode */
+    --peach:   #1e1509;
+    --mint:    #091c18;
+    --sky:     #091422;
+    --lemon:   #181400;
+    --lavender:#141228;
+    --blush:   #200d16;
+
+    /* accent tints stay the same — they're vivid enough */
+    --coral:   #FFB347;
+    --corald:  #D4872A;
+    --teal:    #5BBFA1;
+    --teald:   #3A9A82;
+    --blue:    #6AADE4;
+    --yellow:  #D4A800;
+    --lilac:   #9B8FE8;
+    --rose:    #E86A8A;
+}
+
+/* ── Base surfaces ── */
+body.dark { background: var(--bg); color: var(--text); }
+
+body.dark .card {
+    background: var(--card);
+    border-color: var(--border);
+}
+
+/* ── Top bar & sidebar ── */
+body.dark .top-bar {
+    background: #13131c;
+    border-bottom-color: var(--border);
+}
+body.dark .sidebar {
+    background: #13131c;
+    border-right-color: var(--border);
+}
+body.dark .bottom-nav {
+    background: #13131c;
+    border-top-color: var(--border);
+}
+
+/* ── Sidebar nav items ── */
+body.dark .nav-item { color: var(--muted); }
+body.dark .nav-item:hover { background: rgba(255,179,71,.07); color: var(--coral); }
+body.dark .nav-item.on   { background: rgba(255,179,71,.12); color: var(--coral); }
+body.dark .bottom-nav-item { color: var(--muted); }
+body.dark .bottom-nav-item.on { color: var(--coral); }
+
+/* ── Sidebar user area ── */
+body.dark .sidebar-user { cursor: pointer; border-radius: 14px; transition: background .15s; }
+body.dark .sidebar-user:hover { background: rgba(255,179,71,.07); }
+
+/* ── Auth screen stays dark by design — no change needed ── */
+
+/* ── Modals ── */
+body.dark .modal {
+    background: #17171f;
+    border-top: 1.5px solid var(--border);
+}
+body.dark .modal-bg { background: rgba(0,0,0,.65); }
+
+/* ── Form fields ── */
+body.dark .ifield {
+    background: #0e0e14;
+    border-color: var(--border);
+    color: var(--text);
+}
+body.dark .ifield::placeholder { color: var(--muted); }
+body.dark select.ifield option  { background: #17171f; color: var(--text); }
+
+/* ── Search box ── */
+body.dark .search-box {
+    background: #0e0e14;
+    border-color: var(--border);
+}
+body.dark .search-box input { color: var(--text); }
+
+/* ── Category filter pills ── */
+body.dark .pill {
+    /* pills use inline bg/color set from JS — we only need to fix the
+       "All" pill and any that don't have an active colour */
+    filter: brightness(.75) saturate(.9);
+}
+body.dark .pill[style*="var(--coral)"] { filter: none; }   /* active "All" pill */
+
+/* ── Sort buttons ── */
+body.dark .sort-btn {
+    background: #1d1d28;
+    border-color: var(--border);
+    color: var(--muted);
+}
+body.dark .sort-btn.on {
+    background: var(--peach);
+    border-color: var(--coral);
+    color: var(--coral);
+}
+
+/* ── Entry rows ── */
+body.dark .entry-row {
+    background: var(--card);
+    border-color: var(--border);
+}
+body.dark .entry-row:hover {
+    background: #1e1e2c;
+    border-color: rgba(255,179,71,.25);
+}
+body.dark .entry-note { color: var(--text); }
+body.dark .entry-meta { color: var(--muted); }
+body.dark .del-btn    { color: var(--muted); }
+body.dark .del-btn:hover { color: var(--rose); }
+
+/* ── Balance strip cards ── */
+body.dark .bal-card { border-color: transparent; }
+
+/* ── Stat cards ── */
+body.dark .stat-card { border-color: transparent; }
+
+/* ── Progress bar background ── */
+body.dark .prog-bg { background: var(--border); }
+
+/* ── Category chips in cat grid ── */
+body.dark .cat-chip-btn {
+    background: #1d1d28 !important;
+    border-color: var(--border) !important;
+    color: var(--muted) !important;
+}
+body.dark .cat-chip-btn.on { /* keep inline style from JS — just ensure border shows */ }
+
+/* ── Type toggle (expense / income) ── */
+body.dark .tog-btn {
+    background: #1d1d28;
+    color: var(--muted);
+}
+body.dark .tog-btn.on  { background: var(--coral); color: #fff; }
+body.dark .tog-btn.off { background: #1d1d28; color: var(--muted); }
+
+/* ── Recur / split check row buttons ── */
+body.dark .check-row {
+    background: #1d1d28;
+    border-color: var(--border);
+    color: var(--muted);
+}
+
+/* ── Group cards ── */
+body.dark .group-card {
+    background: var(--card);
+    border-color: var(--border);
+}
+body.dark .group-card:hover  { border-color: rgba(255,179,71,.3); }
+body.dark .group-card.active { border-color: var(--coral); background: #1e1509; }
+
+/* ── Goal cards ── */
+body.dark .goal-card {
+    background: var(--card);
+    border-color: var(--border);
+}
+
+/* ── Insight cards ── */
+body.dark .insight-card { border-color: transparent; }
+
+/* ── Split type grid buttons ── */
+body.dark .split-type-btn {
+    background: #1d1d28;
+    border-color: var(--border);
+    color: var(--muted);
+}
+body.dark .split-type-btn.on {
+    background: var(--peach);
+    border-color: var(--coral);
+    color: var(--coral);
+}
+
+/* ── Misc ── */
+body.dark .hamburger, body.dark .chev-btn { color: var(--text); }
+body.dark .fab-btn { /* keep orange — no change */ }
+body.dark .logout-btn {
+    background: rgba(232,106,138,.1);
+    color: var(--rose);
+}
+body.dark .empty-state .empty-title { color: var(--text); }
+body.dark .empty-state .empty-sub   { color: var(--muted); }
+body.dark ::-webkit-scrollbar-thumb { background: var(--border); }
+body.dark ::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Theme toggle button (top bar) ── */
+.theme-toggle {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s, border-color .2s;
+    flex-shrink: 0;
+}
+.theme-toggle:hover { background: var(--border); }
+
+/* ══════════════════════════════════════════════
+   PROFILE PAGE
+══════════════════════════════════════════════ */
+.profile-wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+.profile-hero {
+    background: linear-gradient(135deg, var(--peach), var(--lemon));
+    border-radius: 22px;
+    padding: 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 16px;
+    border: 1.5px solid var(--border);
+}
+
+.profile-avatar-big {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: var(--coral);
+    color: #fff;
+    font-size: 30px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+}
+
+.profile-hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--corald);
+    font-weight: 700;
+}
+
+.profile-hero-email {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.profile-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: .9px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.profile-save-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--coral), var(--corald));
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity .2s;
+}
+.profile-save-btn:hover { opacity: .88; }
+
+.profile-msg {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    display: none;
+}
+.profile-msg.success { background: var(--mint); color: var(--teald); display: block; }
+.profile-msg.error   { background: var(--blush); color: var(--rose); display: block; }
+
+.sidebar-user {
+    cursor: pointer;
+    border-radius: 14px;
+    transition: background .15s;
+}
+.sidebar-user:hover { background: rgba(255,179,71,.08); }

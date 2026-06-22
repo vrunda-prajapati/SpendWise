@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#FFECD2" />
-    <title>Paisa Tracker</title>
+    <title>SpendWise</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,400&display=swap"
         rel="stylesheet" />
@@ -20,8 +20,8 @@
     <div id="auth-screen">
         <div class="auth-box">
             <div class="auth-logo">
-                <div class="auth-logo-a">Paisa</div>
-                <div class="auth-logo-b">Tracker</div>
+                <div class="auth-logo-a">Spend</div>
+                <div class="auth-logo-b">Wise</div>
                 <div class="auth-logo-tag">YOUR MONEY · CLEAR & CALM</div>
             </div>
             <div class="auth-tabs">
@@ -55,10 +55,10 @@
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-head">
-                <div class="sidebar-logo-a">Paisa</div>
-                <div class="sidebar-logo-b">Tracker</div>
+                <div class="sidebar-logo-a">Spend</div>
+                <div class="sidebar-logo-b">Wise</div>
             </div>
-            <div class="sidebar-user">
+            <div class="sidebar-user" onclick="openProfile()">
                 <div class="user-avatar" id="user-avatar">?</div>
                 <div>
                     <div class="user-name" id="user-name-display">—</div>
@@ -91,6 +91,7 @@
                     <div class="top-bar-title" id="page-title">Dashboard</div>
                 </div>
                 <div class="top-bar-right">
+                    <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()">🌙</button>
                     <div class="month-nav">
                         <button class="chev-btn" onclick="changeMonth(-1)">‹</button>
                         <span class="month-lbl" id="month-lbl"></span>
@@ -190,7 +191,7 @@
             <button class="save-btn" onclick="saveGroupExpense()">Add Expense</button>
         </div>
     </div>
-    
+
     <script src="./js/app.js"></script>
 </body>
 

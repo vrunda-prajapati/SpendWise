@@ -154,12 +154,6 @@ function doLogout() {
 
 function setAuthErr(msg) { document.getElementById("auth-err").textContent = msg; }
 
-// Auto-login
-(function () {
-  const u = localStorage.getItem("paisa_current_user");
-  if (u) { try { loginSuccess(JSON.parse(u)); } catch (e) { } }
-})();
-
 // ══════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════
@@ -851,6 +845,157 @@ function saveEntry() {
 }
 
 // ══════════════════════════════════════════════
+// DARK / LIGHT MODE
+// ══════════════════════════════════════════════
+function initTheme() {
+  const saved = localStorage.getItem("spendwise_theme") || "light";
+  setTheme(saved);
+}
+
+function setTheme(t) {
+  document.body.classList.toggle("dark", t === "dark");
+  localStorage.setItem("spendwise_theme", t);
+  const btn = document.getElementById("theme-toggle-btn");
+  if (btn) btn.textContent = t === "dark" ? "☀️" : "🌙";
+}
+
+function toggleTheme() {
+  const isDark = document.body.classList.contains("dark");
+  setTheme(isDark ? "light" : "dark");
+}
+
+// ══════════════════════════════════════════════
+// PROFILE PAGE
+// ══════════════════════════════════════════════
+function openProfile() {
+  closeSidebar();
+  curTab = "profile";
+  document.getElementById("page-title").textContent = "Profile";
+  destroyCharts();
+  renderProfile(document.getElementById("page-body"));
+}
+
+function renderProfile(el) {
+  const u = currentUser;
+  el.innerHTML = `
+    <div class="profile-wrap fade-up">
+
+      <!-- Hero card -->
+      <div class="profile-hero">
+        <div class="profile-avatar-big">${u.name[0].toUpperCase()}</div>
+        <div>
+          <div class="profile-hero-name">${u.name}</div>
+          <div class="profile-hero-email">${u.email}</div>
+        </div>
+      </div>
+
+      <!-- Edit name & email -->
+      <div class="card" style="margin-bottom:12px;">
+        <div class="profile-section-title">Personal Info</div>
+        <input class="ifield" id="p-name" placeholder="Your name" value="${u.name}" />
+        <input class="ifield" id="p-email" type="email" placeholder="Email address" value="${u.email}" />
+        <button class="profile-save-btn" onclick="saveProfileInfo()">Save Changes</button>
+        <div class="profile-msg" id="info-msg"></div>
+      </div>
+
+      <!-- Change password -->
+      <div class="card" style="margin-bottom:12px;">
+        <div class="profile-section-title">Change Password</div>
+        <input class="ifield" id="p-curpass" type="password" placeholder="Current password" />
+        <input class="ifield" id="p-newpass" type="password" placeholder="New password (min 6 chars)" />
+        <input class="ifield" id="p-conpass" type="password" placeholder="Confirm new password" />
+        <button class="profile-save-btn" onclick="saveProfilePassword()">Update Password</button>
+        <div class="profile-msg" id="pass-msg"></div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="card" style="border-color:var(--rose);">
+        <div class="profile-section-title" style="color:var(--rose);">Account</div>
+        <button onclick="doLogout()" style="width:100%;padding:13px;background:var(--blush);color:var(--rose);border:none;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;">
+          🚪 Sign Out
+        </button>
+      </div>
+
+    </div>`;
+}
+
+async function saveProfileInfo() {
+  const name = document.getElementById("p-name").value.trim();
+  const email = document.getElementById("p-email").value.trim();
+  const msg = document.getElementById("info-msg");
+  msg.className = "profile-msg";
+
+  if (!name || !email) { showProfileMsg(msg, "error", "Please fill all fields."); return; }
+
+  try {
+    const res = await fetch(`http://localhost:3002/api/auth/update-profile`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: currentUser.id, name, email })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      currentUser.name = name;
+      currentUser.email = email;
+      localStorage.setItem("paisa_current_user", JSON.stringify(currentUser));
+      document.getElementById("user-name-display").textContent = name;
+      document.getElementById("user-email-display").textContent = email;
+      document.getElementById("user-avatar").textContent = name[0].toUpperCase();
+      showProfileMsg(msg, "success", "✅ Profile updated!");
+      renderProfile(document.getElementById("page-body"));
+    } else {
+      showProfileMsg(msg, "error", data.message || "Update failed.");
+    }
+  } catch (e) {
+    showProfileMsg(msg, "error", "Server error. Please try again.");
+  }
+}
+
+async function saveProfilePassword() {
+  const cur = document.getElementById("p-curpass").value;
+  const np = document.getElementById("p-newpass").value;
+  const cp = document.getElementById("p-conpass").value;
+  const msg = document.getElementById("pass-msg");
+  msg.className = "profile-msg";
+
+  if (!cur || !np || !cp) { showProfileMsg(msg, "error", "Fill all password fields."); return; }
+  if (np.length < 6) { showProfileMsg(msg, "error", "New password must be at least 6 characters."); return; }
+  if (np !== cp) { showProfileMsg(msg, "error", "New passwords don't match."); return; }
+
+  try {
+    const res = await fetch(`http://localhost:3002/api/auth/update-password`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: currentUser.id, currentPassword: cur, newPassword: np })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showProfileMsg(msg, "success", "✅ Password updated!");
+      document.getElementById("p-curpass").value = "";
+      document.getElementById("p-newpass").value = "";
+      document.getElementById("p-conpass").value = "";
+    } else {
+      showProfileMsg(msg, "error", data.message || "Update failed.");
+    }
+  } catch (e) {
+    showProfileMsg(msg, "error", "Server error. Please try again.");
+  }
+}
+
+function showProfileMsg(el, type, text) {
+  el.className = `profile-msg ${type}`;
+  el.textContent = text;
+  setTimeout(() => { el.className = "profile-msg"; }, 3500);
+}
+// ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
-buildCatGrid();
+document.addEventListener("DOMContentLoaded", function () {
+    buildCatGrid();
+    initTheme();
+
+    const u = localStorage.getItem("paisa_current_user");
+    if (u) {
+        try { loginSuccess(JSON.parse(u)); } catch (e) { }
+    }
+});
