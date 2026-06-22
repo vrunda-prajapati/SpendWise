@@ -86,4 +86,29 @@ router.post("/login", (req, res) => {
     );
 });
 
+// Update name & email
+router.put("/update-profile", (req, res) => {
+    const { id, name, email } = req.body;
+    db.query("UPDATE users SET name=?, email=? WHERE id=?", [name, email, id], (err) => {
+        if (err) return res.status(500).json({ message: err.message });
+        res.status(200).json({ message: "Profile updated" });
+    });
+});
+
+// Update password
+router.put("/update-password", (req, res) => {
+    const { id, currentPassword, newPassword } = req.body;
+    db.query("SELECT * FROM users WHERE id=?", [id], (err, result) => {
+        if (err) return res.status(500).json({ message: err.message });
+        if (!result.length) return res.status(404).json({ message: "User not found" });
+        const matches = bcrypt.compareSync(currentPassword, result[0].password);
+        if (!matches) return res.status(400).json({ message: "Current password is incorrect." });
+        const hashed = bcrypt.hashSync(newPassword, 10);
+        db.query("UPDATE users SET password=? WHERE id=?", [hashed, id], (err) => {
+            if (err) return res.status(500).json({ message: err.message });
+            res.status(200).json({ message: "Password updated" });
+        });
+    });
+});
+
 module.exports = router;
