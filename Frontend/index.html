@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#FFECD2" />
+    <title>Paisa Tracker</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,400&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <!-- ── AUTH SCREEN ── -->
+    <div id="auth-screen">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <div class="auth-logo-a">Paisa</div>
+                <div class="auth-logo-b">Tracker</div>
+                <div class="auth-logo-tag">YOUR MONEY · CLEAR & CALM</div>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab on" onclick="authTab('login',this)">Sign In</button>
+                <button class="auth-tab" onclick="authTab('signup',this)">Sign Up</button>
+            </div>
+            <div id="auth-login">
+                <input class="auth-field" id="login-email" type="email" placeholder="Email address" />
+                <input class="auth-field" id="login-pass" type="password" placeholder="Password"
+                    onkeydown="if(event.key==='Enter')doLogin()" />
+                <button class="auth-btn" onclick="doLogin()">Sign In →</button>
+            </div>
+            <div id="auth-signup" class="hidden">
+                <input class="auth-field" id="signup-name" placeholder="Your name" />
+                <input class="auth-field" id="signup-email" type="email" placeholder="Email address" />
+                <input class="auth-field" id="signup-pass" type="password" placeholder="Password (min 6 chars)"
+                    onkeydown="if(event.key==='Enter')doSignup()" />
+                <button class="auth-btn" onclick="doSignup()">Create Account →</button>
+            </div>
+            <div id="auth-err" class="auth-err"></div>
+            <div class="auth-hint">Data saved locally on this device</div>
+        </div>
+    </div>
+
+    <!-- ── APP SHELL ── -->
+    <div id="app-shell" class="hidden">
+
+        <!-- Sidebar overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-head">
+                <div class="sidebar-logo-a">Paisa</div>
+                <div class="sidebar-logo-b">Tracker</div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-avatar" id="user-avatar">?</div>
+                <div>
+                    <div class="user-name" id="user-name-display">—</div>
+                    <div class="user-email" id="user-email-display">—</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <button class="nav-item on" onclick="goTab('dash',this)"><span
+                        class="nav-icon">📊</span>Dashboard</button>
+                <button class="nav-item" onclick="goTab('entries',this)"><span
+                        class="nav-icon">📋</span>Entries</button>
+                <button class="nav-item" onclick="goTab('split',this)"><span class="nav-icon">✂️</span>Split &amp;
+                    Groups</button>
+                <button class="nav-item" onclick="goTab('goals',this)"><span class="nav-icon">🎯</span>Budget
+                    Goals</button>
+                <button class="nav-item" onclick="goTab('insights',this)"><span
+                        class="nav-icon">💡</span>Insights</button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="doLogout()">🚪 Sign out</button>
+            </div>
+        </div>
+
+        <!-- Main area -->
+        <div class="main-area">
+            <!-- Top bar -->
+            <div class="top-bar">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                    <div class="top-bar-title" id="page-title">Dashboard</div>
+                </div>
+                <div class="top-bar-right">
+                    <div class="month-nav">
+                        <button class="chev-btn" onclick="changeMonth(-1)">‹</button>
+                        <span class="month-lbl" id="month-lbl"></span>
+                        <button class="chev-btn" onclick="changeMonth(1)">›</button>
+                    </div>
+                    <button class="fab-btn" onclick="openModal()"><span style="font-size:16px;">+</span><span>Add
+                            Entry</span></button>
+                </div>
+            </div>
+
+            <!-- Page body -->
+            <div class="page-body" id="page-body"></div>
+        </div>
+    </div>
+
+    <!-- Mobile FAB -->
+    <button class="mobile-fab" onclick="openModal()">+</button>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item on" onclick="goTab('dash',this)"><span class="bn-icon">📊</span>Dash</button>
+        <button class="bottom-nav-item" onclick="goTab('entries',this)"><span class="bn-icon">📋</span>Log</button>
+        <button class="bottom-nav-item" onclick="goTab('split',this)"><span class="bn-icon">✂️</span>Split</button>
+        <button class="bottom-nav-item" onclick="goTab('goals',this)"><span class="bn-icon">🎯</span>Goals</button>
+        <button class="bottom-nav-item" onclick="goTab('insights',this)"><span class="bn-icon">💡</span>Tips</button>
+    </div>
+
+    <!-- Add Entry Modal -->
+    <div class="modal-bg" id="modal-bg" onclick="handleModalBg(event)">
+        <div class="modal">
+            <div class="drag"></div>
+            <div class="modal-title">New Entry</div>
+            <div class="tog">
+                <button class="tog-btn on" id="tog-exp" onclick="setFType('expense')">💸 Expense</button>
+                <button class="tog-btn off" id="tog-inc" onclick="setFType('income')">💰 Income</button>
+            </div>
+            <input class="ifield amt-field" id="f-amt" type="number" placeholder="₹ 0" />
+            <div class="cat-grid" id="cat-grid"></div>
+            <input class="ifield" id="f-note" placeholder="Note (e.g. team lunch, groceries…)" />
+            <input class="ifield" id="f-date" type="date" />
+            <div class="two-col">
+                <input class="ifield" id="f-tag" placeholder="#tag e.g. holiday" style="margin-bottom:0;" />
+                <button class="check-row" id="recur-btn" onclick="toggleRecur()">🔁 Recurring <span id="recur-chk"
+                        style="margin-left:auto;">☐</span></button>
+            </div>
+            <button class="check-row" id="split-btn" onclick="toggleSplitModal()" style="margin-top:8px;width:100%;">✂️
+                Split with others <span id="split-chk" style="margin-left:auto;">☐</span></button>
+            <div id="split-section" class="hidden" style="margin-top:8px;">
+                <input class="ifield" id="f-people" placeholder="Names: Raj, Priya, Amit…"
+                    oninput="updatePerPreview()" />
+                <div class="per-preview hidden" id="per-preview">✂️ <span id="per-amt-txt"></span></div>
+            </div>
+            <button class="save-btn" onclick="saveEntry()">Save Entry</button>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal-bg" id="group-modal-bg" onclick="if(event.target===this)closeGroupModal()">
+        <div class="modal">
+            <div class="drag"></div>
+            <div class="modal-title" id="group-modal-title">New Group</div>
+            <input class="ifield" id="gm-name" placeholder="Group name e.g. Goa Trip 🏖️" />
+            <select class="ifield" id="gm-emoji">
+                <option value="🏖️">🏖️ Beach Trip</option>
+                <option value="🏕️">🏕️ Camping</option>
+                <option value="🏠">🏠 Home / Flat</option>
+                <option value="🍽️">🍽️ Dining</option>
+                <option value="✈️">✈️ Travel</option>
+                <option value="🎉">🎉 Event / Party</option>
+                <option value="👥">👥 General</option>
+            </select>
+            <div class="lbl" style="margin-bottom:8px;">MEMBERS</div>
+            <div class="members-list" id="members-list"></div>
+            <button class="add-member-btn" onclick="addMemberField()">+ Add Member</button>
+            <button class="save-btn" onclick="saveGroup()">Create Group</button>
+        </div>
+    </div>
+
+    <!-- Add Group Expense Modal -->
+    <div class="modal-bg" id="gexp-modal-bg" onclick="if(event.target===this)closeGexpModal()">
+        <div class="modal">
+            <div class="drag"></div>
+            <div class="modal-title">Add Group Expense</div>
+            <input class="ifield amt-field" id="ge-amt" type="number" placeholder="₹ 0"
+                oninput="updateSplitBreakdown()" />
+            <input class="ifield" id="ge-desc" placeholder="What for? e.g. Hotel booking" />
+            <input class="ifield" id="ge-date" type="date" />
+            <div class="lbl" style="margin-bottom:8px;">PAID BY</div>
+            <select class="ifield" id="ge-payer"></select>
+            <div class="lbl" style="margin-bottom:8px;">SPLIT TYPE</div>
+            <div class="split-type-grid">
+                <button class="split-type-btn on" onclick="setSplitType('equal',this)">⚖️<br />Equal</button>
+                <button class="split-type-btn" onclick="setSplitType('percent',this)">%<br />Percent</button>
+                <button class="split-type-btn" onclick="setSplitType('exact',this)">₹<br />Exact</button>
+            </div>
+            <div id="split-breakdown-wrap"></div>
+            <button class="save-btn" onclick="saveGroupExpense()">Add Expense</button>
+        </div>
+    </div>
+    
+    <script src="./js/app.js"></script>
+</body>
+
+</html>
