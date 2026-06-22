@@ -1722,7 +1722,6 @@ body.dark .cat-chip-btn {
     border-color: var(--border) !important;
     color: var(--muted) !important;
 }
-body.dark .cat-chip-btn.on { /* keep inline style from JS — just ensure border shows */ }
 
 /* ── Type toggle (expense / income) ── */
 body.dark .tog-btn {
@@ -1770,7 +1769,6 @@ body.dark .split-type-btn.on {
 
 /* ── Misc ── */
 body.dark .hamburger, body.dark .chev-btn { color: var(--text); }
-body.dark .fab-btn { /* keep orange — no change */ }
 body.dark .logout-btn {
     background: rgba(232,106,138,.1);
     color: var(--rose);
