@@ -157,7 +157,7 @@ function setAuthErr(msg) { document.getElementById("auth-err").textContent = msg
 // ══════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════
-const TAB_TITLES = { dash: "Dashboard", entries: "Entries", split: "Split & Groups", goals: "Budget Goals", insights: "Insights" };
+const TAB_TITLES = { dash: "Dashboard", entries: "Entries", split: "Split & Groups", goals: "Budget Goals", savingsgoals: "Savings Goals", insights: "Insights" };
 
 function goTab(tab, btn) {
   curTab = tab;
@@ -226,6 +226,7 @@ function render() {
   else if (curTab === "entries") renderEntries(pb);
   else if (curTab === "split") renderSplit(pb);
   else if (curTab === "goals") renderGoals(pb);
+  else if (curTab === "savingsgoals") renderSavingsGoals(pb); 
   else if (curTab === "insights") renderInsights(pb);
 }
 

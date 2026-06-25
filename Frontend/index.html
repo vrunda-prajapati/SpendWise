@@ -11,7 +11,8 @@
         href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,400&display=swap"
         rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/goals.css" />
 </head>
 
 <body>
@@ -74,6 +75,9 @@
                     Groups</button>
                 <button class="nav-item" onclick="goTab('goals',this)"><span class="nav-icon">🎯</span>Budget
                     Goals</button>
+                <button class="nav-item" onclick="goTab('savingsgoals',this)">
+                    <span class="nav-icon">💰</span>Savings Goals
+                </button>
                 <button class="nav-item" onclick="goTab('insights',this)"><span
                         class="nav-icon">💡</span>Insights</button>
             </nav>
@@ -116,6 +120,9 @@
         <button class="bottom-nav-item" onclick="goTab('entries',this)"><span class="bn-icon">📋</span>Log</button>
         <button class="bottom-nav-item" onclick="goTab('split',this)"><span class="bn-icon">✂️</span>Split</button>
         <button class="bottom-nav-item" onclick="goTab('goals',this)"><span class="bn-icon">🎯</span>Goals</button>
+        <button class="bottom-nav-item" onclick="goTab('savingsgoals',this)">
+            <span class="bn-icon">💰</span>Savings
+        </button>
         <button class="bottom-nav-item" onclick="goTab('insights',this)"><span class="bn-icon">💡</span>Tips</button>
     </div>
 
@@ -193,6 +200,7 @@
     </div>
 
     <script src="./js/app.js"></script>
+    <script src="./js/goals.js"></script>
 </body>
 
 </html>
